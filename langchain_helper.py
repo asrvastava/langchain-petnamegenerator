@@ -1,4 +1,3 @@
-from langchain_community.llms import OpenAI 
 from dotenv import load_dotenv,find_dotenv
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
@@ -8,8 +7,6 @@ from langchain.agents import AgentType
 from langchain_community.llms import HuggingFaceHub
 
 load_dotenv()
-
-
 
 def generate_petname(animal_name,animal_color):
     repo_id = "google/flan-t5-xxl"
@@ -26,7 +23,10 @@ def generate_petname(animal_name,animal_color):
 
 
 def langchain_Agent():
-    llm = OpenAI(temperature=0.5)
+    repo_id = "google/flan-t5-xxl"
+    llm = HuggingFaceHub(
+    repo_id=repo_id, model_kwargs={"temperature": 0.7, "max_length": 64}
+        ) 
     tools = load_tools(["wikipedia","llm-math"],llm=llm)
     agent =initialize_agent(tools,agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,verbose=True)
     result = agent.run(
